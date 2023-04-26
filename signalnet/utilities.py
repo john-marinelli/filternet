@@ -18,6 +18,7 @@ def frame_up(X_train, X_test, y_train, y_test, window=9):
 
     return X_train_ann, X_test_ann, y_train_ann, y_test_ann
 
+
 def frame_up_new(X_train, X_test, y_train, y_test, window=9):
     X_train_new = []
     y_train_new = []
@@ -27,22 +28,20 @@ def frame_up_new(X_train, X_test, y_train, y_test, window=9):
     for idx, item in enumerate(X_train):
         if idx >= window and idx < (len(y_train) - 1):
             frame = list(X_train[idx-window:idx])
-            X_train_new.append(frame)
+            X_train_new.append(frame.copy())
             frame.append(y_train[idx+1])
-            y_train_new.append(frame)
+            y_train_new.append(frame.copy())
 
     for idx, item in enumerate(X_test):
         if idx >= window and idx < (len(y_test) - 1):
             frame = list(X_test[idx-window:idx])
-            X_test_new.append(frame)
-            print(len(frame))
+            X_test_new.append(frame.copy())
             frame.append(y_test[idx+1])
-            print(len(frame))
-            y_test_new.append(frame)
-
-    print(len(X_train_new))
-    print(len(y_train_new[0]))
+            y_test_new.append(frame.copy())
+    print(len(X_train_new[0]))
+    print(np.array(X_train_new).shape)
     return np.array(X_train_new), np.array(X_test_new), np.array(y_train_new), np.array(y_test_new)
+
 
 def train_test(X, y, percent=None):
     length = len(y)
