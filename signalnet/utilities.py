@@ -26,17 +26,41 @@ def frame_up_new(X_train, X_test, y_train, y_test, window=9):
     y_test_new = []
 
     for idx, item in enumerate(X_train):
-        if idx >= window and idx < (len(y_train) - 1):
+        if idx >= window and idx < (len(y_train)):
             frame = list(X_train[idx-window:idx])
             X_train_new.append(frame.copy())
-            frame.append(y_train[idx+1])
+            frame.append(y_train[idx])
             y_train_new.append(frame.copy())
 
     for idx, item in enumerate(X_test):
-        if idx >= window and idx < (len(y_test) - 1):
+        if idx >= window and idx < (len(y_test)):
             frame = list(X_test[idx-window:idx])
             X_test_new.append(frame.copy())
-            frame.append(y_test[idx+1])
+            frame.append(y_test[idx])
+            y_test_new.append(frame.copy())
+    print(len(X_train_new[0]))
+    print(np.array(X_train_new).shape)
+    return np.array(X_train_new), np.array(X_test_new), np.array(y_train_new), np.array(y_test_new)
+
+
+def frame_up_same(X_train, X_test, y_train, y_test, window=9):
+    X_train_new = []
+    y_train_new = []
+    X_test_new = []
+    y_test_new = []
+
+    for idx, item in enumerate(X_train):
+        if idx >= window and idx < (len(y_train)):
+            frame = list(X_train[idx-window:idx+1])
+            X_train_new.append(frame.copy())
+            frame = list(y_train[idx-window:idx+1])
+            y_train_new.append(frame.copy())
+
+    for idx, item in enumerate(X_test):
+        if idx >= window and idx < (len(y_test)):
+            frame = list(X_test[idx-window:idx+1])
+            X_test_new.append(frame.copy())
+            frame = list(y_test[idx-window:idx+1])
             y_test_new.append(frame.copy())
     print(len(X_train_new[0]))
     print(np.array(X_train_new).shape)
