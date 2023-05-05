@@ -1,4 +1,6 @@
 import numpy as np
+from sklearn.preprocessing import StandardScaler
+import copy
 
 
 def frame_up(X_train, X_test, y_train, y_test, window=9):
@@ -94,3 +96,22 @@ def train_test(X, y, percent=None):
     length = len(y)
     mid = int(length / 2)
     return X[:mid], X[mid:], y[:mid], y[mid:]
+
+
+def lstm_prep(df, look_back):
+    scaler = StandardScaler()
+
+    df["pre_filter"] = scaler.fit_transform(
+        df["pre_filter"].to_numpy().reshape(-1, 1))
+
+    X_train, X_test, y_train, y_test = train_test(
+        df["pre_filter"].to_numpy(), df["post_filter"].to_numpy())
+
+    noframe_test = copy.deepcopy(X_test)
+    X_train, X_test, y_train, y_test = frame_up_ann(
+        X_train, X_test, y_train, y_test, window=look_back)
+
+    X_train = np.reshape(X_train, (X_train.shape[0], X_train.shape[1], 1))
+    X_test = np.reshape(X_test, (X_test.shape[0], X_test.shape[1], 1))
+
+    return X_test.copy(), X_test.copy(), y_train.copy(), y_test.copy(), noframe_test
